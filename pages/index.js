@@ -1,8 +1,23 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import { event } from 'nextjs-google-analytics';
+import cookieCutter from 'cookie-cutter';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  function trackEvent(e) {
+    event('button-clicked', {
+      category: 'Layer0 A/B Environment',
+      label: destination,
+    });
+    setEventData(window.dataLayer.pop());
+  }
+
+  const [destination, setDestination] = useState('');
+  const [eventData, setEventData] = useState();
+  useEffect(() => setDestination(cookieCutter.get('layer0_destination')), []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,54 +31,36 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+        <p>
+          This example application has an A/B test splittng traffic 50/50 to
+          either `default` or `split_test` environments configured in the Edgio
+          Developer Console.
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        <p>
+          Your experience is determined by a `layer0_destination` cookie which
+          defines the environment that responded to this request. You will
+          remain on this experience until your cookie expires or is cleared.
+        </p>
+        <p>
+          Your <code className={styles.code}>layer0_destination</code> cookie is{' '}
+          <code className={styles.code}>{destination}</code>.
+        </p>
+        <p>
+          <button onClick={trackEvent}>Click here</button> to track this event.
+        </p>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {eventData && (
+          <p>
+            <div>
+              The analytic event contained the following details:
+              <pre className={styles.code}>
+                {JSON.stringify(eventData, null, 2)}
+              </pre>
+            </div>
+          </p>
+        )}
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
