@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { event } from 'nextjs-google-analytics';
 import cookieCutter from 'cookie-cutter';
@@ -8,7 +7,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   function trackEvent(e) {
     event('button-clicked', {
-      category: 'Layer0 A/B Environment',
+      category: 'Edgio A/B Environment',
       label: destination,
     });
     setEventData(window.dataLayer.pop());
@@ -40,7 +39,7 @@ export default function Home() {
         <p>
           Your experience is determined by a `layer0_destination` cookie which
           defines the environment that responded to this request. You will
-          remain on this experience until your cookie expires or is cleared.
+          remain on this experience until your browser session expires.
         </p>
         <p>
           Your <code className={styles.code}>layer0_destination</code> cookie is{' '}
