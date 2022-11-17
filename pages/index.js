@@ -15,7 +15,7 @@ export default function Home() {
 
   const [destination, setDestination] = useState('');
   const [eventData, setEventData] = useState();
-  useEffect(() => setDestination(cookieCutter.get('layer0_destination')), []);
+  useEffect(() => setDestination(cookieCutter.get('edgio_destination')), []);
 
   return (
     <div className={styles.container}>
@@ -37,12 +37,12 @@ export default function Home() {
         </p>
 
         <p>
-          Your experience is determined by a `layer0_destination` cookie which
+          Your experience is determined by a `edgio_destination` cookie which
           defines the environment that responded to this request. You will
           remain on this experience until your browser session expires.
         </p>
         <p>
-          Your <code className={styles.code}>layer0_destination</code> cookie is{' '}
+          Your <code className={styles.code}>edgio_destination</code> cookie is{' '}
           <code className={styles.code}>{destination}</code>.
         </p>
         <p>
